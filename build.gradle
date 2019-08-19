@@ -1,0 +1,24 @@
+plugins {
+  id 'maven'
+  id 'java'
+}
+allprojects {
+  version = '2.0-SNAPSHOT'
+  group = 'com.github.timobaumann'
+  repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://jitpack.io/" }
+  }
+}
+
+dependencies {
+  compile subprojects
+}
+
+dependencies {
+    subprojects.each {
+        childJars project(it.path)
+    }
+}
+
