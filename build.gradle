@@ -10,15 +10,11 @@ allprojects {
     jcenter()
     maven { url "https://jitpack.io/" }
   }
+  apply plugin: 'java'
 }
 
 dependencies {
   compile subprojects
 }
 
-dependencies {
-    subprojects.each {
-        childJars project(it.path)
-    }
-}
 
