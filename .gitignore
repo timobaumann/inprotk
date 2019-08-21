@@ -3,10 +3,15 @@
 
 # Log file
 *.log
+/log/
 
+inprotk.iml
 /.idea
 /.gradle
 /build
+/inprotk.*/build/
+/inprotk.*/out/
+/inprotk.*/log/
 
 # Package Files #
 *.jar

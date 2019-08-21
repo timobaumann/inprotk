@@ -10,5 +10,7 @@
 rootProject.name = 'inprotk'
 
 include 'inprotk.base'
+include 'inprotk.speech'
 include 'inprotk.iss'
 //include 'inprotk.isr'
+include 'inprotk.demo'

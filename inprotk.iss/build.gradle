@@ -1,0 +1,7 @@
+dependencies {
+  implementation project(':inprotk.base')
+  implementation project(':inprotk.speech')
+  compile group: 'de.dfki.mary', name: 'marytts-runtime', version: '5.2'
+  testCompile group: 'de.dfki.mary', name: 'voice-bits1-hsmm', version: '5.2'
+  testCompile group: 'de.dfki.mary', name: 'voice-cmu-slt-hsmm', version: '5.2'
+}
