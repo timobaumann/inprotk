@@ -68,7 +68,7 @@ public class AudioUtils {
 	private static class SkipStream extends BaseDoubleDataSource {
 		DoubleDataSource source;
 		int skip;
-		public SkipStream(VocodingAudioStream source, int skip) {
+		public SkipStream(DoubleDataSource source, int skip) {
 			this.source = source;
 			this.skip = skip;
 		}

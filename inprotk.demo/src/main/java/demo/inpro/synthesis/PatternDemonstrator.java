@@ -134,38 +134,35 @@ public abstract class PatternDemonstrator extends JPanel {
 				throw new RuntimeException("Line matching " + info + " not supported.");
 			}
 			final SourceDataLine line;
-			line = (SourceDataLine) AudioSystem.getLine(info);
+			line = (SourceDataLine) AudioSystem	.getLine(info);
 			line.open(format, 1280);
 			System.err.println("speaker actually has buffer size " + line.getBufferSize());
 
 			dispatcher = new DispatchStream();
 
-			Runnable streamDrainer = new Runnable() {
-				@Override
-				public void run() {
-					byte[] b = new byte[320]; // that will fit 10 ms
-					while (true) {
-						int bytesRead = 0;
-						try {
-							bytesRead = dispatcher.read(b, 0, b.length);
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-						if (bytesRead > 0)
-							// no need to sleep, because the call to the microphone will already slow us down
-							line.write(b, 0, bytesRead);
-						else {// if there is no data, then we wait a little for data to become available (instead of looping like crazy)
-							if (bytesRead <= 0 && dispatcher.inShutdown())
-								return;
-							try {
-								Thread.sleep(20);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-			};
+			Runnable streamDrainer = () -> {
+                byte[] b = new byte[320]; // that will fit 10 ms
+                while (true) {
+                    int bytesRead = 0;
+                    try {
+                        bytesRead = dispatcher.read(b, 0, b.length);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    if (bytesRead > 0)
+                        // no need to sleep, because the call to the microphone will already slow us down
+                        line.write(b, 0, bytesRead);
+                    else {// if there is no data, then we wait a little for data to become available (instead of looping like crazy)
+                        if (bytesRead <= 0 && dispatcher.inShutdown())
+                            return;
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
 
 			new Thread(streamDrainer, "streamToSpeakers").start();
 			line.start();

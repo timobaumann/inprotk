@@ -4,4 +4,5 @@ dependencies {
   implementation project(':inprotk.iss')
   implementation group: 'de.dfki.mary', name: 'marytts-runtime', version: '5.2'
   runtime group: 'de.dfki.mary', name: 'voice-bits1-hsmm', version: '5.2'
+  runtime group: 'de.dfki.mary', name: 'voice-cmu-slt-hsmm', version: '5.2'
 }
