@@ -91,6 +91,7 @@ public class SysSegmentIU extends SegmentIU {
 		
 		setHTSModel(newSeg.getHTSModel());
 		this.legacyHTSmodel = newSeg.legacyHTSmodel;
+		this.htsModel = newSeg.htsModel;
 		
 		this.hmmSynthesisFeatures = newSeg.hmmSynthesisFeatures;
 	}
@@ -148,7 +149,7 @@ public class SysSegmentIU extends SegmentIU {
 
 	HTSModel generateHTSModel() {
 //		FeatureVector fv = ComputeHMMFeatureVector.featuresForSegmentIU(this);
-//		double prevErr = getSameLevelLink() != null & getSameLevelLink() instanceof SysSegmentIU ? ((SysSegmentIU) getSameLevelLink()).getHTSModel().getDurError() : 0f;
+//		double prevErr = getSameLevelLink() != null && getSameLevelLink() instanceof SysSegmentIU ? ((SysSegmentIU) getSameLevelLink()).getHTSModel().getDurError() : 0f;
 //		HTSModel htsModel = hmmdata.getCartTreeSet().generateHTSModel(hmmdata, hmmdata.getFeatureDefinition(), fv, prevErr);
 		//possibly throw away htsModel's f0-values if you don't like it:
 		// htsModel.setMaryXmlF0("");
@@ -205,7 +206,7 @@ public class SysSegmentIU extends SegmentIU {
 		// make sure we have a paramGenerator
 		PHTSParameterGeneration paramGen = new PHTSParameterGeneration(hmmdata);
 		FullPStream pstream = paramGen.buildFullPStreamFor(localHMMs);
-		hmmSynthesisFeatures = new ArrayList<FullPFeatureFrame>(length);
+		hmmSynthesisFeatures = new ArrayList<>(length);
 		// ponder whether we really want this; in particular, we probably don't want this in no-future incremental use-cases!
 		boolean useMaryF0 = true;
 		Queue<Double> maryF0Values = null; // one per voiced state in this segment's htsModel

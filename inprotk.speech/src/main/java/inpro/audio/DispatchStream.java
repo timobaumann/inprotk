@@ -3,8 +3,7 @@ package inpro.audio;
 import inpro.util.PathUtil;
 import org.apache.log4j.Logger;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.*;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Queue;
@@ -79,19 +78,18 @@ public class DispatchStream extends InputStream {
 	
 	protected void addStream(InputStream is) {
 		logger.info("adding stream to queue: " + is);
-		//synchronized(this) {
-//			if (stream != null) {
-				//if (streamQueue.isEmpty())
-					streamQueue.add(is);
-//			} else {
-//				stream = is;
-//			}
-		//}
+		streamQueue.add(is);
+		synchronized(this) {
+			notifyAll();
+		}
 	}
 
 	/** clears any ongoing stream, as well as any queued streams */
 	public void clearStream() {
 		setStream(null);
+		synchronized(this) {
+			notifyAll();
+		}
 	}
 	
 	protected void setStream(InputStream is) {
@@ -106,6 +104,9 @@ public class DispatchStream extends InputStream {
 				}
 			}
 			stream = is;
+			synchronized(this) {
+				notifyAll();
+			}
 		}
 	}
 	
@@ -130,6 +131,9 @@ public class DispatchStream extends InputStream {
 	
 	private void nextStream() {
 		stream = streamQueue.poll();
+		synchronized(this) {
+			notifyAll();
+		}
 	}
 
 	@Override
@@ -182,5 +186,52 @@ public class DispatchStream extends InputStream {
 		}
 	}
 
+	public static DispatchStream drainingDispatchStream() {
+		DispatchStream dispatcher = new DispatchStream();
+		try {
+			AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 16000.f, 16, 1, (16/8)*1, 16000.f, false);
+			DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+			if (!AudioSystem.isLineSupported(info)) {
+				throw new RuntimeException("Line matching " + info + " not supported.");
+			}
+			final SourceDataLine line;
+			line = (SourceDataLine) AudioSystem	.getLine(info);
+			line.open(format, 1280);
+			System.err.println("speaker actually has buffer size " + line.getBufferSize());
+
+
+			Runnable streamDrainer = () -> {
+				byte[] b = new byte[320]; // that will fit 10 ms
+				while (true) {
+					int bytesRead = 0;
+					try {
+						bytesRead = dispatcher.read(b, 0, b.length);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					if (bytesRead > 0)
+						// no need to sleep, because the call to the microphone will already slow us down
+						line.write(b, 0, bytesRead);
+					else {// if there is no data, then we wait a little for data to become available (instead of looping like crazy)
+						if (bytesRead <= 0 && dispatcher.inShutdown())
+							return;
+						try {
+							Thread.sleep(20);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			};
+
+			new Thread(streamDrainer, "streamToSpeakers").start();
+			line.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+		return dispatcher;
+	}
 	
 }

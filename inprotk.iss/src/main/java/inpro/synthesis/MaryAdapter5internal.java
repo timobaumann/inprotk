@@ -94,7 +94,7 @@ public class MaryAdapter5internal extends MaryAdapter {
 		ihtse.synthesizeAudio = false;
 		InputStream is = fullySpecifiedMarkup2maryxml(markup);
 		// useful for looking at Mary's XML (for debugging): 
-		//printStream(is); ihtse.resetUttHMMstore(); is = fullyCompleteMarkup2maryxml(markup);
+		//printStream(is); ihtse.resetUttHMMstore(); is = fullySpecifiedMarkup2maryxml(markup);
 		List<PhraseIU> groundedIn = TTSUtil.phraseIUsFromMaryXML(is, ihtse.getUttData(), true);
 		return groundedIn;
 	}
@@ -107,7 +107,7 @@ public class MaryAdapter5internal extends MaryAdapter {
 		ihtse.resetUttHMMstore();
 		ihtse.synthesizeAudio = false;
 		InputStream is = text2maryxml(tts);
-		//printStream(is); ihtse.resetUttHMMstore(); is = markup2maryxml(markup);
+		//printStream(is); ihtse.resetUttHMMstore(); is = text2maryxml(tts);
 		try {
 			return createIUsFromInputStream(is, ihtse.getUttData(), keepPhrases, connectPhrases);
 		} catch (AssertionError ae) {
@@ -130,11 +130,7 @@ public class MaryAdapter5internal extends MaryAdapter {
 		return ((HMMVoice) voice).getHMMData();
 	}
 
-	public static PHTSParameterGeneration getNewParamGen() {
-		return new PHTSParameterGeneration(getDefaultHMMData());
-	}
-
-    /** print Mary's XML to stderr */ 
+    /** print Mary's XML to stderr */
 	@SuppressWarnings("unused")
 	private void printStream(InputStream is) {
 		java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(is));

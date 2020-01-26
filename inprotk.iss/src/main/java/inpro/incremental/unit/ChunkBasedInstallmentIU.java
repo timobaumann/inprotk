@@ -80,7 +80,7 @@ public class ChunkBasedInstallmentIU extends SysInstallmentIU {
 		// for connected prosody, resynthesize everything into a new installment, and keep only the new part (however, old parts will be back-substituted)
 		// for unconnected prosody, synthesize only the new chunk 
 		if (System.getProperty("proso.cond.connect", "true").equals("true")) {
-			List<String> chunkTexts = new ArrayList<String>();
+			List<String> chunkTexts = new ArrayList<>();
 			// move back to the first chunkIU of the installment
 			for (ChunkIU oldChunk : chunks) {
 				chunkTexts.add(oldChunk.toPayLoad());
