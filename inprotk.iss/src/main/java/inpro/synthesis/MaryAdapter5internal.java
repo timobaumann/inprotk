@@ -94,7 +94,9 @@ public class MaryAdapter5internal extends MaryAdapter {
 		ihtse.synthesizeAudio = false;
 		InputStream is = fullySpecifiedMarkup2maryxml(markup);
 		// useful for looking at Mary's XML (for debugging): 
-		//printStream(is); ihtse.resetUttHMMstore(); is = fullySpecifiedMarkup2maryxml(markup);
+		if (System.getProperty("inpro.tts.debug", "false").equals("true")){
+			printStream(is); ihtse.resetUttHMMstore(); is = fullySpecifiedMarkup2maryxml(markup);
+		}
 		List<PhraseIU> groundedIn = TTSUtil.phraseIUsFromMaryXML(is, ihtse.getUttData(), true);
 		return groundedIn;
 	}
