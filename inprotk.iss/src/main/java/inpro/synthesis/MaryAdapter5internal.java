@@ -109,7 +109,9 @@ public class MaryAdapter5internal extends MaryAdapter {
 		ihtse.resetUttHMMstore();
 		ihtse.synthesizeAudio = false;
 		InputStream is = text2maryxml(tts);
-		//printStream(is); ihtse.resetUttHMMstore(); is = text2maryxml(tts);
+		if (System.getProperty("inpro.tts.debug", "false").equals("true")) {
+			printStream(is); ihtse.resetUttHMMstore(); is = text2maryxml(tts);
+		}
 		try {
 			return createIUsFromInputStream(is, ihtse.getUttData(), keepPhrases, connectPhrases);
 		} catch (AssertionError ae) {
