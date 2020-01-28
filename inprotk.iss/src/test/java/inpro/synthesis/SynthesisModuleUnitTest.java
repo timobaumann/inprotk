@@ -176,12 +176,12 @@ public class SynthesisModuleUnitTest extends SynthesisModuleTestBase {
 	@Test(timeout=60000)
 	public void testMinimalExtension() throws InterruptedException {
 		String s1 = "Nimm bitte das Kreuz und lege es";
-		String s2 = "nach links.";
+		String s2 = "nach links";
 		//myIUModule.addIUAndUpdate(new ChunkIU(s1 + " " + s2));
 		//dispatcher.waitUntilDone();
 		//myIUModule.reset();
 
-		System.setProperty("proso.cond.connect", "true");
+		//System.setProperty("proso.cond.connect", "true");
 
 		myIUModule.addIUAndUpdate(new ChunkIU(s1));
 		myIUModule.addIUAndUpdate(new ChunkIU(s2));
@@ -222,7 +222,7 @@ public class SynthesisModuleUnitTest extends SynthesisModuleTestBase {
 	}
 	
 	/**
-	 * test en_US and en_GB
+	 * test en_GB
 	 */
 	@Test(timeout=60000)
 	public void testInternationalisationGB() {
@@ -238,15 +238,17 @@ public class SynthesisModuleUnitTest extends SynthesisModuleTestBase {
 	}
 
 	/**
-	 * test en_US and en_GB
+	 * test en_US
 	 */
-	@Test(timeout=60000)
-	public void testInternationalisationUS() {
+	@Test(timeout=6000000)
+	public void testInternationalisationUS() throws InterruptedException {
 		String voice = System.getProperty("inpro.tts.voice");
 		String language = System.getProperty("inpro.tts.language");
 		System.setProperty("inpro.tts.voice", "cmu-slt-hsmm");
+		System.setProperty("mary.voice", "cmu-slt-hsmm");
         System.setProperty("inpro.tts.language", "en_US");
         myIUModule.addIUAndUpdate(new ChunkIU("I can also speak with an American accent."));
+		Thread.sleep(10);
         dispatcher.waitUntilDone();
 		myIUModule.reset();
         System.setProperty("inpro.tts.voice", voice);
