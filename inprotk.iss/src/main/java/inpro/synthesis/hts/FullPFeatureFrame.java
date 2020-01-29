@@ -105,7 +105,7 @@ public class FullPFeatureFrame {
 		double[] mag = new double[0];
 		double[] str = Arrays.copyOfRange(allParams, 35, 40);
 		double lf0Par = allParams[40];
-		boolean voiced = lf0Par < -99999;
+		boolean voiced = lf0Par > -99999;
 		return new FullPFeatureFrame(mcep, mag, str, voiced, lf0Par);
 	}
 
