@@ -70,8 +70,8 @@ public class FullPFeatureFrame {
 
 	static final Pattern fromStringPattern = Pattern.compile("mcep: \\[(.*)\\], mag: \\[(.*)\\], str: \\[(.*)\\], (.*)voiced(.*)");
 	
-	static double[] stringToDoubleList(String s) {
-		String[] sarray = s.split(", ");
+	static double[] stringToDoubleList(String s, String sep) {
+		String[] sarray = s.split(sep);
 		double[] darray = new double[sarray.length];
 		for (int i = 0; i < sarray.length; i++) {
 			darray[i] = Double.parseDouble(sarray[i]);
@@ -85,15 +85,27 @@ public class FullPFeatureFrame {
 		Matcher m = fromStringPattern.matcher(s);
 		boolean b = m.matches();
 		assert b && m.groupCount() == 5 : s + " does not match " + fromStringPattern.toString();
-		double[] mcep = stringToDoubleList(m.group(1));
-		double[] mag = stringToDoubleList(m.group(2));
-		double[] str = stringToDoubleList(m.group(3));
+		double[] mcep = stringToDoubleList(m.group(1), ", ");
+		double[] mag = stringToDoubleList(m.group(2), ", ");
+		double[] str = stringToDoubleList(m.group(3), ", ");
 		boolean voiced = m.group(4).equals("");
 		double lf0Par = 0.0;
 		if (voiced) {
 			String lf0String = m.group(5).replaceFirst(" with pitch ", "").replaceAll(" Hz", "");
 			lf0Par = Double.parseDouble(lf0String);
 		}
+		return new FullPFeatureFrame(mcep, mag, str, voiced, lf0Par);
+	}
+
+	public static FullPFeatureFrame fromCSV(String line) {
+		line = line.trim();
+		double[] allParams = stringToDoubleList(line, "\t");
+		assert allParams.length == 41; // 35 + 5 + 1
+		double[] mcep = Arrays.copyOfRange(allParams, 0, 35);
+		double[] mag = new double[0];
+		double[] str = Arrays.copyOfRange(allParams, 35, 40);
+		double lf0Par = allParams[40];
+		boolean voiced = lf0Par < -99999;
 		return new FullPFeatureFrame(mcep, mag, str, voiced, lf0Par);
 	}
 

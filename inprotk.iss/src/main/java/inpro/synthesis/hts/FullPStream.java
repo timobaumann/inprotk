@@ -32,7 +32,6 @@ public abstract class FullPStream {
 	}
 	
 	public int getMcepParSize() { return getNextFrame().getMcepParSize(); }
-	public int getMcepVSize() { return getMcepParSize() * HTSPStream.NUM; }
 	public int getStrParSize() { return getNextFrame().getStrParSize(); }
     
 	public boolean hasFrame(int t) {
