@@ -2,9 +2,7 @@ package inpro.synthesis;
 
 import inpro.incremental.unit.PhraseIU;
 import inpro.incremental.unit.WordIU;
-import inpro.incremental.util.TTSUtil;
 import inpro.synthesis.hts.InteractiveHTSEngine;
-import inpro.synthesis.hts.PHTSParameterGeneration;
 import marytts.LocalMaryInterface;
 import marytts.MaryInterface;
 import marytts.datatypes.MaryDataType;
@@ -97,7 +95,7 @@ public class MaryAdapter5internal extends MaryAdapter {
 		if (System.getProperty("inpro.tts.debug", "false").equals("true")){
 			printStream(is); ihtse.resetUttHMMstore(); is = fullySpecifiedMarkup2maryxml(markup);
 		}
-		List<PhraseIU> groundedIn = TTSUtil.phraseIUsFromMaryXML(is, ihtse.getUttData(), true);
+		List<PhraseIU> groundedIn = (List<PhraseIU>) createIUsFromInputStream(is, ihtse.getUttData(), true, true);
 		return groundedIn;
 	}
 

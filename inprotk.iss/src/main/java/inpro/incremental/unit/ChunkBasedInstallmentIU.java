@@ -11,20 +11,20 @@ import java.util.ListIterator;
 
 
 /** 
- * an synthesizable InstallmentIU that uses chunkss to structure its output.
- * Chunks are simply sequences of words, that might or might no co-incide with intonation phrases
- * chunkss can be added even when the utterance is already being produced
- * (currently, chunkss cannot be "revoked" from the installment as that wasn't necessary in our tasks yet)
+ * an synthesizable InstallmentIU that uses chunks to structure its output.
+ * Chunks are simply sequences of words, that might or might no coincide with intonation phrases
+ * chunks can be added even when the utterance is already being produced
+ * (currently, chunks cannot be "revoked" from the installment as that wasn't necessary in our tasks yet)
  * @author timo
  */
 public class ChunkBasedInstallmentIU extends SysInstallmentIU {
-	/** counts the hesitations in this installment (which need to be accounted for when counting the continuation point of a resynthesis when appending a continuation */
+	/** counts the hesitations in this installment (which need to be accounted for when counting the continuation point of a re-synthesis when appending a continuation */
 	private int numHesitationsInserted = 0;
 	/** keeps the list of chunks that this installment is based on */
 	private final IUList<ChunkIU> chunks = new IUList<ChunkIU>();
 	
 	public ChunkBasedInstallmentIU(HesitationIU hesitation) {
-		super("<hes>", new ArrayList<WordIU>(Collections.<WordIU>singletonList((WordIU)hesitation)));
+		super("<hes>", new ArrayList<>(Collections.<WordIU>singletonList(hesitation)));
 		numHesitationsInserted++;
 		chunks.add(hesitation);
 	}
@@ -46,7 +46,7 @@ public class ChunkBasedInstallmentIU extends SysInstallmentIU {
 	/** append words for this chunk at the end of the installment */
 	public void appendChunk(ChunkIU chunk) {
 		WordIU oldLastWord = getFinalWord(); // everything that follows this word via fSLL belongs to the new chunk
-		List<IU> chunkWords = new ArrayList<IU>();
+		List<IU> chunkWords = new ArrayList<>();
 		if (chunk instanceof HesitationIU) {
 			chunk.shiftBy(oldLastWord.getLastSegment().endTime());
 			chunkWords.add(chunk);

@@ -32,17 +32,14 @@ public class ProsodyDemonstrator extends PatternDemonstrator {
 		pitchRange.addChangeListener(pitchChangeListener);
 		strengthRange.addChangeListener(strengthChangeListener);
 		loudnessRange.addChangeListener(loudnessChangeListener);
-		stressingRange.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				double value = getSourceValue(e); // should be normalized between -100 and +100
-				strengthPostProcessor.setLoudness((int) value);
-				tempoChangeListener.performChange(value / 100f);
-				pitchChangeListener.performChange(value);
-				//loudness:
-				VocodingAudioStream.gain = Math.exp((value * .01) * Math.log(2));
-			}
-		});
+		stressingRange.addChangeListener(e -> {
+            double value = getSourceValue(e); // should be normalized between -100 and +100
+            strengthPostProcessor.setLoudness((int) value);
+            tempoChangeListener.performChange(value / 100f);
+            pitchChangeListener.performChange(value);
+            //loudness:
+            VocodingAudioStream.gain = Math.exp((value * .01) * Math.log(2));
+        });
 		this.add(generatedText);
 		this.add(new JButton(new AbstractAction("", new ImageIcon(ProsodyDemonstrator.class.getResource("media-playback-start.png"))) {
 			@Override
@@ -122,15 +119,15 @@ public class ProsodyDemonstrator extends PatternDemonstrator {
 		// scale for value is -1200 to +1200
 		public void performChange(double offset) {
 // values of -1000 should reduce variance from 86 to 0, of +1000 excursions should be twice as large
-			offset /= 1200; // normalize to [-1;+1]
+//			offset /= 1200; // normalize to [-1;+1]
 			for (SysSegmentIU seg : getSegments()) {
 //				if (seg.getFromNetwork("up").getUserData("accent") != null) {
 //					System.err.println("stressed syllable:" + seg.getFromNetwork("up").getUserData("accent"));
 //				} else {
 //					System.err.println("unstressed syllable!");
 //				}
-//				seg.pitchShiftInCent = offset;
-				seg.pitchExcitationFactor = offset;
+				seg.pitchShiftInCent = offset;
+//				seg.pitchExcitationFactor = offset;
 			}
 		}
 	};
@@ -157,32 +154,21 @@ public class ProsodyDemonstrator extends PatternDemonstrator {
 	};
 	
 	final LoudnessPostProcessor strengthPostProcessor = new LoudnessPostProcessor();
-	final ChangeListener strengthChangeListener = new ChangeListener() {
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			strengthPostProcessor.setLoudness(getSourceValue(e));
-		}
-	};
+	final ChangeListener strengthChangeListener = e -> strengthPostProcessor.setLoudness(getSourceValue(e));
 	
-	final ChangeListener loudnessChangeListener = new ChangeListener() {
-		@Override
-		public void stateChanged(ChangeEvent e) {
-			VocodingAudioStream.gain = getSourceValue(e) * .1;
-		}
-		
-	};
+	final ChangeListener loudnessChangeListener = e -> VocodingAudioStream.gain = getSourceValue(e) * .1;
 	
 	/** return the segments in the ongoing utterance (if any) */ 
 	private List<SysSegmentIU> getSegments() {
 		if (installment != null)
 			return installment.getSegments();
 		else
-			return Collections.<SysSegmentIU>emptyList();
+			return Collections.emptyList();
 	}
 	
 	@Override
 	public void greatNewUtterance(String command) {
-		installment = new TreeStructuredInstallmentIU(Collections.<String>singletonList(command));
+		installment = new TreeStructuredInstallmentIU(Collections.singletonList(command));
 		for (IU word : installment.groundedIn()) {
 			word.updateOnGrinUpdates();
 			word.addUpdateListener(iuUpdateRepainter);
@@ -196,12 +182,7 @@ public class ProsodyDemonstrator extends PatternDemonstrator {
 	}
 	
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				createAndShowGUI(new ProsodyDemonstrator());
-			}
-		});
+		SwingUtilities.invokeLater(() -> createAndShowGUI(new ProsodyDemonstrator()));
 	}
 
 }
