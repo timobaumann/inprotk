@@ -30,7 +30,7 @@ public class MaryAdapter5internal extends MaryAdapter {
 
 	private static Logger logger = Logger.getLogger(MaryAdapter5internal.class);
 
-	protected MaryAdapter5internal() {
+	public MaryAdapter5internal() {
 		maryInterface = null;
 		try {
 			maryInterface = new LocalMaryInterface();

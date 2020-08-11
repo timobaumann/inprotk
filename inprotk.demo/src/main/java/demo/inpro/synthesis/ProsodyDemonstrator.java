@@ -46,7 +46,7 @@ public class ProsodyDemonstrator extends PatternDemonstrator {
 			public void actionPerformed(ActionEvent e) {
 				System.err.println(generatedText.getText());
 				String html = generatedText.getText();
-				String txt = html.replaceAll("<.*?>", "").replaceAll("^[\\n\\w]+", "").replaceAll("[\\n\\w]+$", "");
+				String txt = html.replaceAll("<.*?>", "").replaceAll("^[\\n\\w]+", "").replaceAll("[\\n\\w]+$", "").trim();
 				System.err.println(txt);
 				greatNewUtterance(txt);
 		        dispatcher.playStream(installment.getAudio(), true);

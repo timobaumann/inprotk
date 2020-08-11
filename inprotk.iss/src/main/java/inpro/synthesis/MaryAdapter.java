@@ -13,9 +13,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ServiceLoader;
 
 /**
  * our connection to mary; with support for Marytts 5.1+ and external
@@ -31,39 +33,33 @@ import java.util.regex.Pattern;
  */
 public abstract class MaryAdapter {
 
-	enum CompatibilityMode { MARYEXTERNAL, MARY5INTERNAL;	
-		public static CompatibilityMode fromString(String mode) {
-			if ("internal".equals(mode)) return MARY5INTERNAL;
-			return MARY5INTERNAL;
-		}
-	}
-	
-	public static CompatibilityMode compatibilityMode = CompatibilityMode.fromString(
-								System.getProperty("mary.version", "internal"));
-
     private static Logger logger = Logger.getLogger(MaryAdapter.class);
 
     private static MaryAdapter maryAdapter;
 	
 	public static void initializeMary() {
-		initializeMary(compatibilityMode);
+		initializeMary(System.getProperty("mary.version", "internal"));
 	}
 	
-	public static void initializeMary(CompatibilityMode compatibilityMode) {
-		logger.info("initializing Mary in compatibility mode " + compatibilityMode);
+	public static void initializeMary(String compatibilityMode) {
+		if (compatibilityMode.equals("internal")) { // to support legacy code
+			compatibilityMode = "inpro.synthesis.MaryAdapter5internal";
+		}
+		logger.info("loading Mary adapter from " + compatibilityMode);
 		maryAdapter = null;
-		try {
-			switch (compatibilityMode) {
-			case MARY5INTERNAL:
-				maryAdapter = new MaryAdapter5internal();
+		ServiceLoader<MaryAdapter> loader = ServiceLoader.load(MaryAdapter.class);
+		Iterator<MaryAdapter> it = loader.iterator();
+		while (it.hasNext()) {
+			MaryAdapter ma = it.next();
+			if (ma.getClass().getName().equals(compatibilityMode)) {
+				maryAdapter = ma;
 				break;
-			default:
-				throw new RuntimeException("InproTK does not support old versions of MaryTTS anymore.");
 			}
-		} catch (Exception e) {
-			logger.info("could not start MaryAdapter");
-			e.printStackTrace();
-		}	
+		}
+		if (maryAdapter == null) {
+			logger.info("could not start MaryAdapter " + compatibilityMode);
+			throw new RuntimeException("InproTK does not support old versions of MaryTTS anymore.");
+		}
 	}
 
 	/** get the MaryAdapter singleton */

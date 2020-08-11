@@ -286,6 +286,8 @@ public class TTSUtil {
 		}
 		
 		public SysSegmentIU toIU(Iterator<SynthesisPayload> spIterator) {
+			if (Double.isNaN(endTime))
+				endTime = .001 * duration;
 			Label l = new Label(endTime - (duration / TimeUtil.SECOND_TO_MILLISECOND_FACTOR), endTime, sampaLabel);
 			SysSegmentIU segIU;
 			assert spIterator != null;

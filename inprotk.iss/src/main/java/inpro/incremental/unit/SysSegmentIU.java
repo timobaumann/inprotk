@@ -29,7 +29,7 @@ public class SysSegmentIU extends SegmentIU {
 	/** the HMM states to be used for the segment (as determined from the feature vector) */
 	HTSModel htsModel;
 	/** the synthesis parameters that result from HMM optimization */
-	List<FullPFeatureFrame> hmmSynthesisFeatures;
+	public List<FullPFeatureFrame> hmmSynthesisFeatures;
 	
 	/** post-processing options: */
 	public double pitchShiftInCent = 0.0;
