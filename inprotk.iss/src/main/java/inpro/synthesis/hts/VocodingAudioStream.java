@@ -115,7 +115,7 @@ public class VocodingAudioStream extends BaseDoubleDataSource implements Runnabl
     
     boolean firstDelivery = true;
     
-    public static double gain = 1.0;
+    public static double gain = 0.3;
     
     Logger logger = Logger.getLogger("Vocoding Audio Stream");
     

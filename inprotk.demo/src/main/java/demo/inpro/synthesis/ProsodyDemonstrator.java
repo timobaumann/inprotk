@@ -38,7 +38,7 @@ public class ProsodyDemonstrator extends PatternDemonstrator {
             tempoChangeListener.performChange(value / 100f);
             pitchChangeListener.performChange(value);
             //loudness:
-            VocodingAudioStream.gain = Math.exp((value * .01) * Math.log(2));
+            VocodingAudioStream.gain = 0.3* Math.exp((value * .01) * Math.log(2));
         });
 		this.add(generatedText);
 		this.add(new JButton(new AbstractAction("", new ImageIcon(ProsodyDemonstrator.class.getResource("media-playback-start.png"))) {
@@ -156,8 +156,8 @@ public class ProsodyDemonstrator extends PatternDemonstrator {
 	final LoudnessPostProcessor strengthPostProcessor = new LoudnessPostProcessor();
 	final ChangeListener strengthChangeListener = e -> strengthPostProcessor.setLoudness(getSourceValue(e));
 	
-	final ChangeListener loudnessChangeListener = e -> VocodingAudioStream.gain = getSourceValue(e) * .1;
-	
+	final ChangeListener loudnessChangeListener = e -> VocodingAudioStream.gain = 0.3 * getSourceValue(e) * .1;
+
 	/** return the segments in the ongoing utterance (if any) */ 
 	private List<SysSegmentIU> getSegments() {
 		if (installment != null)
