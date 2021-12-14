@@ -5,7 +5,8 @@ import inpro.incremental.unit.EditType;
 import inpro.incremental.unit.IU;
 import inpro.incremental.unit.IUList;
 import inpro.util.TimeUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,7 @@ public abstract class IUModule extends PushBuffer {
 	protected final RightBuffer rightBuffer = new RightBuffer();
 	
 	public IUModule() {
-		logger = Logger.getLogger(this.getClass());
+		logger = LogManager.getLogger(this.getClass());
 	}
 	
 	public void addListener(PushBuffer listener) {

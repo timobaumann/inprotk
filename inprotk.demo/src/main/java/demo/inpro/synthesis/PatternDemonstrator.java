@@ -9,7 +9,6 @@ import inpro.synthesis.MaryAdapter;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
-import javax.xml.ws.Dispatch;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;

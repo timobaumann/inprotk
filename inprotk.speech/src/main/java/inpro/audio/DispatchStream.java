@@ -1,7 +1,8 @@
 package inpro.audio;
 
 import inpro.util.PathUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -17,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class DispatchStream extends InputStream {
 
-	private static Logger logger = Logger.getLogger(DispatchStream.class);
+	private static Logger logger = LogManager.getLogger(DispatchStream.class);
 
 	private boolean sendSilence = true;
 	

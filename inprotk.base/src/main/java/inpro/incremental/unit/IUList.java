@@ -5,12 +5,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 @SuppressWarnings("serial")
 public class IUList<IUType extends IU> extends ArrayList<IUType> {
 
-	private static final Logger logger = Logger.getLogger(IUList.class);
+	private static final Logger logger = LogManager.getLogger(IUList.class);
 
 	IUType firstIU;
 	
